@@ -38,8 +38,8 @@ namespace Game1
 
         public void Update(Vector3 pos)
         {
-            camTarget.X = pos.X;
-            camTarget.Z = pos.Z;
+            //camTarget.X = pos.X;
+            //camTarget.Z = pos.Z;
 
             camPosition.Y = pos.Y +10;
             camTarget.Y = pos.Y +10;

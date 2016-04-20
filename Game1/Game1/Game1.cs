@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Windows.Forms;
 
 namespace Game1
 {
@@ -12,6 +13,7 @@ namespace Game1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Textrenderer textrend;
 
         Camera cam;
         Doodle player;
@@ -26,6 +28,8 @@ namespace Game1
         //Geometric info
         VertexPositionColor[] triangleVertices;
         VertexBuffer vertexBuffer;
+
+        Quader qu;
 
         public Game1()
         {
@@ -51,6 +55,7 @@ namespace Game1
             IsMouseVisible = true;
 
             score = 0;
+            qu = new Quader(new Vector3(0, 0, 0), new Vector3(20,0,0), new Vector3(0,0,30), new Vector3(20,0,30), new Vector3(0,50,0), new Vector3(20,50,0), new Vector3(0,50,30), new Vector3(20,50,30), Color.Blue, GraphicsDevice);
 
             //BasicEffect
             basicEffect = new BasicEffect(GraphicsDevice);
@@ -151,9 +156,13 @@ namespace Game1
                 pass.Apply();
                 GraphicsDevice.DrawPrimitives(PrimitiveType.
                                               TriangleList, 0, 3);
+
+
             }
 
             base.Draw(gameTime);
+
+            
         }
     }
 }

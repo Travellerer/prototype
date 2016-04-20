@@ -33,7 +33,7 @@ namespace Game1
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                position.Z -= 1f;
+                position.Z += 1f;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
@@ -43,7 +43,7 @@ namespace Game1
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                position.Z += 1f;
+                position.Z -= 1f;
             }
 
 
