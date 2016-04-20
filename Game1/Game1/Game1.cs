@@ -12,16 +12,9 @@ namespace Game1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //Camera
-        Vector3 camTarget;
-        Vector3 camPosition;
-        Matrix projectionMatrix;
-        Matrix viewMatrix;
-        Matrix worldMatrix;
-
-        //Orbit
-        bool orbit = false;
-
+        Camera cam;
+        Doodle player;
+        bool is_Player_Colliding;
 
         //BasicEffect for rendering
         BasicEffect basicEffect;
@@ -46,21 +39,13 @@ namespace Game1
         {
             // TODO: Add your initialization logic here
 
-            //Setup Camera
-            camTarget = new Vector3(0f, 0f, 0f);
-            camPosition = new Vector3(0f, 0f, -100f);
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                               MathHelper.ToRadians(45f),
-                               GraphicsDevice.DisplayMode.AspectRatio,
-                1f, 1000f);
-            viewMatrix = Matrix.CreateLookAt(camPosition, camTarget,
-                         new Vector3(0f, 1f, 0f));// Y up
-            worldMatrix = Matrix.CreateWorld(camTarget, Vector3.
-                          Forward, Vector3.Up);
-
+            cam = new Camera(GraphicsDevice);
+            player = new Doodle(new Vector3(0,0,0));
+            is_Player_Colliding = false;
 
             base.Initialize();
             IsMouseVisible = true;
+            
 
 
             //BasicEffect
@@ -99,8 +84,6 @@ namespace Game1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -109,7 +92,6 @@ namespace Game1
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -119,58 +101,14 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // End game
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                                       MathHelper.ToRadians(-1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                       MathHelper.ToRadians(1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
-            }
-            // Position und Target ersetzen mit abhängig von Modell
-            //if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            //{
-            //    camPosition.Y -= 1f;
-            //    camTarget.Y -= 1f;
-            //}
-            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            //{
-            //    camPosition.Y += 1f;
-            //    camTarget.Y += 1f;
-            //}
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-            {
-                camPosition.Z += 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
-            {
-                camPosition.Z -= 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                orbit = !orbit;
-            }
+            player.Update(gameTime, is_Player_Colliding);
 
-            if (orbit)
-            {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                        MathHelper.ToRadians(1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
-            }
-            viewMatrix = Matrix.CreateLookAt(camPosition, camTarget,
-                         Vector3.Up);
-
-            // TODO: Add your update logic here
+            // update last
+            cam.Update(player.position);
 
             base.Update(gameTime);
         }
@@ -183,11 +121,9 @@ namespace Game1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
-            basicEffect.Projection = projectionMatrix;
-            basicEffect.View = viewMatrix;
-            basicEffect.World = worldMatrix;
+            basicEffect.Projection = cam.projectionMatrix;
+            basicEffect.View = cam.viewMatrix;
+            basicEffect.World = cam.worldMatrix;
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
