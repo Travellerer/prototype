@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Game1
 {
@@ -15,6 +16,9 @@ namespace Game1
         Camera cam;
         Doodle player;
         bool is_Player_Colliding;
+
+        int score;
+        float maxheight;
 
         //BasicEffect for rendering
         BasicEffect basicEffect;
@@ -45,8 +49,8 @@ namespace Game1
 
             base.Initialize();
             IsMouseVisible = true;
-            
 
+            score = 0;
 
             //BasicEffect
             basicEffect = new BasicEffect(GraphicsDevice);
@@ -107,7 +111,15 @@ namespace Game1
 
             player.Update(gameTime, is_Player_Colliding);
 
-            // update last
+            if (player.position.Y > maxheight)
+            {
+                maxheight = player.position.Y;
+                score = (int) (Math.Pow((double)(maxheight/10),3)/4);
+            }
+
+            Console.WriteLine(score);
+
+                // update last
             cam.Update(player.position);
 
             base.Update(gameTime);
