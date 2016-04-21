@@ -42,17 +42,13 @@ namespace Game1
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                                       MathHelper.ToRadians(-1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
+                Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(-1f));
+                camPosition = Vector3.Transform(camPosition, rotationMatrix);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                       MathHelper.ToRadians(1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
+                Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
+                camPosition = Vector3.Transform(camPosition, rotationMatrix);
             }
             
 
@@ -71,14 +67,11 @@ namespace Game1
 
             if (orbit)
             {
-                Matrix rotationMatrix = Matrix.CreateRotationY(
-                                        MathHelper.ToRadians(1f));
-                camPosition = Vector3.Transform(camPosition,
-                              rotationMatrix);
+                Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
+                camPosition = Vector3.Transform(camPosition, rotationMatrix);
             }
 
-            viewMatrix = Matrix.CreateLookAt(camPosition, camTarget,
-                         Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up);
         }
     }
 }
