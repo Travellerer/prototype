@@ -2,6 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Windows.Forms;
+using System.Drawing;
+
+
+
+//ToDos: 
+
+// Grafik/Modelle: Plattformen, Umgebung, Wasser, Sterbebild
+// Logik: Kollision, Score als Text, Wasseranstieg, Verlieren,Kamera-koordinaten beschränken
 
 namespace Game1
 {
@@ -11,11 +20,14 @@ namespace Game1
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+
+        SpriteFont Font1;
         SpriteBatch spriteBatch;
 
         Camera cam;
         Doodle player;
         bool is_Player_Colliding;
+        Model model;
 
         //Models
         Model doodle;
@@ -27,6 +39,7 @@ namespace Game1
 
         int score;
         float maxheight;
+        bool Gamelost;
 
         //BasicEffect for rendering
         BasicEffect basicEffect;
@@ -58,7 +71,15 @@ namespace Game1
             base.Initialize();
             IsMouseVisible = true;
 
+            Font1 = Content.Load<SpriteFont>("SpriteFont/Miramonte");
+
+
+            //TextRenderer.DrawText(..., score.ToString(), FontFamily.GenericSansSerif, new System.Drawing.Rectangle(350, 30, 100, 30), System.Drawing.Color.Black, System.Drawing.Color.LightGray);
+            model = Content.Load<Model>("Doodle/doodle");
+
             score = 0;
+            Gamelost = false;
+           
 
             //BasicEffect
             basicEffect = new BasicEffect(GraphicsDevice);
@@ -73,9 +94,13 @@ namespace Game1
 
             //Geometry - a simple triangle about the origin
             triangleVertices = new VertexPositionColor[3];
-            triangleVertices[0] = new VertexPositionColor(new Vector3(0, 20, 0), Color.Red);
-            triangleVertices[1] = new VertexPositionColor(new Vector3(-20, -20, 0), Color.Green);
-            triangleVertices[2] = new VertexPositionColor(new Vector3(20, -20, 0), Color.Blue);
+
+            triangleVertices[0] = new VertexPositionColor(new Vector3(
+                                  0, 20, 0), Microsoft.Xna.Framework.Color.Red);
+            triangleVertices[1] = new VertexPositionColor(new Vector3(-
+                                  20, -20, 0), Microsoft.Xna.Framework.Color.Green);
+            triangleVertices[2] = new VertexPositionColor(new Vector3(
+                                  20, -20, 0), Microsoft.Xna.Framework.Color.Blue);
 
             //Vert buffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
@@ -113,20 +138,21 @@ namespace Game1
         protected override void Update(GameTime gameTime)
         {
             // End game
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
+            // Player update
             player.Update(gameTime, is_Player_Colliding);
 
+
+            // Score update
             if (player.position.Y > maxheight)
             {
                 maxheight = player.position.Y;
                 score = (int) (Math.Pow((double)(maxheight/10),3)/4);
             }
 
-            Console.WriteLine(score);
-
-            // update last
+            // update last because dependent on Player
             cam.Update(player.position);
             base.Update(gameTime);
         }
@@ -137,24 +163,34 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             basicEffect.Projection = cam.projectionMatrix;
             basicEffect.View = cam.viewMatrix;
             basicEffect.World = cam.worldMatrix;
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
 
-            //Turn off culling so we see both sides of our rendered triangle
+
+            spriteBatch.DrawString(Font1, score.ToString(), new Vector2(375, 30), Microsoft.Xna.Framework.Color.Black);
+
+
+            //Turn off culling so we see both sides of our rendered          triangle
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+                    Passes)
+            foreach (EffectPass pass in basicEffect.CurrentTechnique.
+                    Passes)
             {
                 pass.Apply();
                 GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);
+
+
             }
 
             VertexLoader doodleMesh = new VertexLoader(doodle, cam, ambientLightColor);
@@ -164,6 +200,8 @@ namespace Game1
             platformMesh.draw();
 
             base.Draw(gameTime);
+            spriteBatch.End();
+
         }
     }
 }

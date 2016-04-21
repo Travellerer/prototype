@@ -41,9 +41,10 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Doodle.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Platform.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quader.cs" />
+    <Compile Include="water.cs" />
     <Compile Include="VertexLoader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,8 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

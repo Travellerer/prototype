@@ -125,3 +125,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Doodle/doodle.fbx
 
+#begin SpriteFont/Miramonte.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:SpriteFont/Miramonte.spritefont
+
