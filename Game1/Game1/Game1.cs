@@ -20,7 +20,8 @@ namespace Game1
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-  
+
+        SpriteFont Font1;
         SpriteBatch spriteBatch;
 
         Camera cam;
@@ -60,9 +61,12 @@ namespace Game1
 
             base.Initialize();
             IsMouseVisible = true;
-            //spriteBatch.DrawString();
+
+            Font1 = Content.Load<SpriteFont>("SpriteFont/Miramonte");
+
+
             //TextRenderer.DrawText(..., score.ToString(), FontFamily.GenericSansSerif, new System.Drawing.Rectangle(350, 30, 100, 30), System.Drawing.Color.Black, System.Drawing.Color.LightGray);
-            model = Content.Load<Model>("Doodle/doodle");
+            //model = Content.Load<Model>("Doodle/doodle");
 
             score = 0;
            
@@ -132,8 +136,6 @@ namespace Game1
                 score = (int) (Math.Pow((double)(maxheight/10),3)/4);
             }
 
-            Console.WriteLine(score);
-
                 // update last
             cam.Update(player.position);
 
@@ -146,6 +148,8 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
+            spriteBatch.Begin();
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             basicEffect.Projection = cam.projectionMatrix;
@@ -155,21 +159,25 @@ namespace Game1
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
 
+
+            spriteBatch.DrawString(Font1, score.ToString(), new Vector2(375, 30), Microsoft.Xna.Framework.Color.Black);
+
+
             //Turn off culling so we see both sides of our rendered          triangle
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            foreach(ModelMesh mm in model.Meshes)
-            {
-                foreach(BasicEffect be in mm.Effects)
-                {
-                    be.LightingEnabled = true;
-                }
+            //foreach (ModelMesh mm in model.Meshes)
+            //{
+            //    foreach (BasicEffect be in mm.Effects)
+            //    {
+            //        be.LightingEnabled = true;
+            //    }
 
-                mm.Draw();
-             
-            }
+            //    mm.Draw();
+
+            //}
 
             foreach (EffectPass pass in basicEffect.CurrentTechnique.
                     Passes)
@@ -182,8 +190,8 @@ namespace Game1
             }
 
             base.Draw(gameTime);
+            spriteBatch.End();
 
-            
         }
     }
 }

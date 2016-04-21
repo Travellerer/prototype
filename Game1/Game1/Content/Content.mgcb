@@ -125,3 +125,9 @@
 /processorParam:TextureFormat=Color
 /build:Doodle/doodle.fbm/doodle1.png
 
+#begin SpriteFont/Miramonte.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:SpriteFont/Miramonte.spritefont
+
