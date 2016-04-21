@@ -28,11 +28,10 @@ namespace Game1
         Model model;
 
         //Models
-        Model doodle;
         Model platform;
         Model sky;
         Model water;
-
+        
         Vector3 ambientLightColor = new Vector3(0,0,0);
 
         int score;
@@ -63,7 +62,10 @@ namespace Game1
             // TODO: Add your initialization logic here
 
             cam = new Camera(GraphicsDevice);
-            player = new Doodle(new Vector3(0,0,0));
+
+            player = new Doodle(new Vector3(0,0,0), cam);
+            player.Initialize(Content);
+
             is_Player_Colliding = false;
 
             base.Initialize();
@@ -108,7 +110,6 @@ namespace Game1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            doodle = Content.Load<Model>("Doodle/doodle");
             platform = Content.Load<Model>("Platform/platform");
             sky = Content.Load<Model>("Sky/sky");
             water = Content.Load<Model>("Water/water");
@@ -136,7 +137,6 @@ namespace Game1
 
             // Player update
             player.Update(gameTime, is_Player_Colliding);
-
 
             // Score update
             if (player.position.Y > maxheight)
@@ -181,8 +181,7 @@ namespace Game1
 
             }
 
-            VertexLoader doodleMesh = new VertexLoader(doodle, cam, ambientLightColor);
-            doodleMesh.draw();
+            player.draw();
 
             VertexLoader platformMesh = new VertexLoader(platform, cam, ambientLightColor);
             platformMesh.draw();

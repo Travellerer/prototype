@@ -24,7 +24,7 @@ namespace Game1
         public Camera(GraphicsDevice GraphicsDevice)
         {
             camTarget = new Vector3(0f, 0f, 0f);
-            camPosition = new Vector3(0f, 0f, -100f);
+            camPosition = new Vector3(0f, 0f, -50);
 
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f),GraphicsDevice.DisplayMode.AspectRatio,1f, 1000f);
             viewMatrix = Matrix.CreateLookAt(camPosition, camTarget,new Vector3(0f, 1f, 0f));// Y up
