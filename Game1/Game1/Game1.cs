@@ -3,6 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Windows.Forms;
+using System.Drawing;
+
+
+
+//ToDos: 
+
+// Grafik/Modelle: Plattformen, Umgebung, Wasser, Sterbebild
+// Logik: Kollision, Score als Text, Wasseranstieg, Verlieren,Kamera-koordinaten beschränken
 
 namespace Game1
 {
@@ -12,12 +20,13 @@ namespace Game1
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+  
         SpriteBatch spriteBatch;
-        Textrenderer textrend;
 
         Camera cam;
         Doodle player;
         bool is_Player_Colliding;
+        Model model;
 
         int score;
         float maxheight;
@@ -28,8 +37,6 @@ namespace Game1
         //Geometric info
         VertexPositionColor[] triangleVertices;
         VertexBuffer vertexBuffer;
-
-        Quader qu;
 
         public Game1()
         {
@@ -53,9 +60,12 @@ namespace Game1
 
             base.Initialize();
             IsMouseVisible = true;
+            //spriteBatch.DrawString();
+            //TextRenderer.DrawText(..., score.ToString(), FontFamily.GenericSansSerif, new System.Drawing.Rectangle(350, 30, 100, 30), System.Drawing.Color.Black, System.Drawing.Color.LightGray);
+            model = Content.Load<Model>("Doodle/doodle");
 
             score = 0;
-            qu = new Quader(new Vector3(0, 0, 0), new Vector3(20,0,0), new Vector3(0,0,30), new Vector3(20,0,30), new Vector3(0,50,0), new Vector3(20,50,0), new Vector3(0,50,30), new Vector3(20,50,30), Color.Blue, GraphicsDevice);
+           
 
             //BasicEffect
             basicEffect = new BasicEffect(GraphicsDevice);
@@ -71,11 +81,11 @@ namespace Game1
             //Geometry  - a simple triangle about the origin
             triangleVertices = new VertexPositionColor[3];
             triangleVertices[0] = new VertexPositionColor(new Vector3(
-                                  0, 20, 0), Color.Red);
+                                  0, 20, 0), Microsoft.Xna.Framework.Color.Red);
             triangleVertices[1] = new VertexPositionColor(new Vector3(-
-                                  20, -20, 0), Color.Green);
+                                  20, -20, 0), Microsoft.Xna.Framework.Color.Green);
             triangleVertices[2] = new VertexPositionColor(new Vector3(
-                                  20, -20, 0), Color.Blue);
+                                  20, -20, 0), Microsoft.Xna.Framework.Color.Blue);
 
             //Vert buffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(
@@ -111,7 +121,7 @@ namespace Game1
         protected override void Update(GameTime gameTime)
         {
             // End game
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
             player.Update(gameTime, is_Player_Colliding);
@@ -136,19 +146,30 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             basicEffect.Projection = cam.projectionMatrix;
             basicEffect.View = cam.viewMatrix;
             basicEffect.World = cam.worldMatrix;
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
 
             //Turn off culling so we see both sides of our rendered          triangle
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
+
+            foreach(ModelMesh mm in model.Meshes)
+            {
+                foreach(BasicEffect be in mm.Effects)
+                {
+                    be.LightingEnabled = true;
+                }
+
+                mm.Draw();
+             
+            }
 
             foreach (EffectPass pass in basicEffect.CurrentTechnique.
                     Passes)
