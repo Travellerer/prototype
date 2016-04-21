@@ -31,6 +31,7 @@ namespace Game1
 
         int score;
         float maxheight;
+        bool Gamelost;
 
         //BasicEffect for rendering
         BasicEffect basicEffect;
@@ -66,9 +67,10 @@ namespace Game1
 
 
             //TextRenderer.DrawText(..., score.ToString(), FontFamily.GenericSansSerif, new System.Drawing.Rectangle(350, 30, 100, 30), System.Drawing.Color.Black, System.Drawing.Color.LightGray);
-            //model = Content.Load<Model>("Doodle/doodle");
+            model = Content.Load<Model>("Doodle/doodle");
 
             score = 0;
+            Gamelost = false;
            
 
             //BasicEffect
@@ -128,15 +130,18 @@ namespace Game1
             if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
+            // Player update
             player.Update(gameTime, is_Player_Colliding);
 
+
+            // Score update
             if (player.position.Y > maxheight)
             {
                 maxheight = player.position.Y;
                 score = (int) (Math.Pow((double)(maxheight/10),3)/4);
             }
 
-                // update last
+            // update last because dependent on Player
             cam.Update(player.position);
 
             base.Update(gameTime);
@@ -172,7 +177,7 @@ namespace Game1
             //{
             //    foreach (BasicEffect be in mm.Effects)
             //    {
-            //        be.LightingEnabled = true;
+            //        be.LightingEnabled =  true;
             //    }
 
             //    mm.Draw();

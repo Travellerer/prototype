@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Game1
 {
     class Doodle
     {
+        Model model;
         public Vector3 position;
         bool is_Jumping;
         TimeSpan start;
@@ -19,6 +21,8 @@ namespace Game1
         {
             position = pos;
             is_Jumping = false;
+
+           // model = Content.Load<Model>("Doodle/doodle");
         }
 
         public void Update(GameTime gameTime, bool collision)
