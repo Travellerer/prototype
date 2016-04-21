@@ -17,6 +17,14 @@ namespace Game1
         Doodle player;
         bool is_Player_Colliding;
 
+        //Models
+        Model doodle;
+        Model platform;
+        Model sky;
+        Model water;
+
+        Vector3 ambientLightColor = new Vector3(0,0,0);
+
         int score;
         float maxheight;
 
@@ -63,21 +71,15 @@ namespace Game1
             //If you want to use lighting and VPC you need to create a       custom def
             basicEffect.LightingEnabled = false;
 
-            //Geometry  - a simple triangle about the origin
+            //Geometry - a simple triangle about the origin
             triangleVertices = new VertexPositionColor[3];
-            triangleVertices[0] = new VertexPositionColor(new Vector3(
-                                  0, 20, 0), Color.Red);
-            triangleVertices[1] = new VertexPositionColor(new Vector3(-
-                                  20, -20, 0), Color.Green);
-            triangleVertices[2] = new VertexPositionColor(new Vector3(
-                                  20, -20, 0), Color.Blue);
+            triangleVertices[0] = new VertexPositionColor(new Vector3(0, 20, 0), Color.Red);
+            triangleVertices[1] = new VertexPositionColor(new Vector3(-20, -20, 0), Color.Green);
+            triangleVertices[2] = new VertexPositionColor(new Vector3(20, -20, 0), Color.Blue);
 
             //Vert buffer
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(
-                           VertexPositionColor), 3, BufferUsage.
-                           WriteOnly);
-            vertexBuffer.SetData<VertexPositionColor>(triangleVertices)
-                                                      ;
+            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
+            vertexBuffer.SetData<VertexPositionColor>(triangleVertices);
         }
 
         /// <summary>
@@ -88,6 +90,11 @@ namespace Game1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            doodle = Content.Load<Model>("Doodle/doodle");
+            platform = Content.Load<Model>("Platform/platform");
+            sky = Content.Load<Model>("Sky/sky");
+            water = Content.Load<Model>("Water/water");
+            
         }
 
         /// <summary>
@@ -119,9 +126,8 @@ namespace Game1
 
             Console.WriteLine(score);
 
-                // update last
+            // update last
             cam.Update(player.position);
-
             base.Update(gameTime);
         }
 
@@ -140,18 +146,22 @@ namespace Game1
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
 
-            //Turn off culling so we see both sides of our rendered          triangle
+            //Turn off culling so we see both sides of our rendered triangle
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.
-                    Passes)
+            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawPrimitives(PrimitiveType.
-                                              TriangleList, 0, 3);
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);
             }
+
+            VertexLoader doodleMesh = new VertexLoader(doodle, cam, ambientLightColor);
+            doodleMesh.draw();
+
+            VertexLoader platformMesh = new VertexLoader(platform, cam, ambientLightColor);
+            platformMesh.draw();
 
             base.Draw(gameTime);
         }

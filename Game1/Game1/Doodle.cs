@@ -24,8 +24,6 @@ namespace Game1
         public void Update(GameTime gameTime, bool collision)
         {
 
-
-
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 position.X += 1f;
@@ -46,18 +44,16 @@ namespace Game1
                 position.Z += 1f;
             }
 
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !is_Jumping && (gameTime.TotalGameTime.Subtract(lastjump).Milliseconds > 300 || lastjump==null))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !is_Jumping && (gameTime.TotalGameTime.Subtract(lastjump).Milliseconds > 300 || lastjump == null))
             {
                 start = gameTime.TotalGameTime;
                 position.Y += 1f;
                 is_Jumping = true;
             }
 
-            if(is_Jumping)
+            if (is_Jumping)
             {
-                    position.Y += 1f;
+                position.Y += 1f;
 
                 if (gameTime.TotalGameTime.Subtract(start).TotalMilliseconds > 800)
                 {
@@ -67,7 +63,7 @@ namespace Game1
 
             }
 
-            if(!collision && !is_Jumping)
+            if (!collision && !is_Jumping)
             {
                 position.Y -= 1f;
             }
