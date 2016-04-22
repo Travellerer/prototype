@@ -61,7 +61,7 @@ namespace Game1
 
             cam = new Camera(GraphicsDevice);
 
-            sky_ = new sky(new Vector3(0, 0, 0));
+            sky_ = new sky(new Vector3(0, 100, 0));
             sky_.Initialize(Content);
 
             water_ = new water(new Vector3(0, -10, 0));
@@ -207,15 +207,15 @@ namespace Game1
                 GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);
 
             }
-
-            water_.draw(cam);
-            //sky_.draw(cam);
+            
+            sky_.draw(cam);
 
             foreach (Platform pf in plList)
             {
                 pf.draw(player.cam);
             }
 
+            water_.draw(cam);
             player.draw();
 
             if (Gamelost)
