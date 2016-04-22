@@ -4,11 +4,12 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 //ToDos: 
 
 // Grafik/Modelle: Plattformen, Umgebung, Wasser, Sterbebild
-// Logik: Kollision, Score als Text, Wasseranstieg, Verlieren,Kamera-koordinaten beschränken
+// Logik: Kollision, Kamera-koordinaten beschränken
 
 namespace Game1
 {
@@ -24,14 +25,12 @@ namespace Game1
 
         Camera cam;
         Doodle player;
-        bool is_Player_Colliding;
-        Model model;
 
-        //Models
-        Model platform;
-        Model sky;
-        Model water;
-        
+        List<Platform> plList;
+        bool is_Player_Colliding;
+
+        water water_;
+
         Vector3 ambientLightColor = new Vector3(0,0,0);
 
         int score;
@@ -66,15 +65,31 @@ namespace Game1
             player = new Doodle(new Vector3(0,0,0), cam);
             player.Initialize(Content);
 
+            plList = new List<Platform>();
+
+            add(new Vector3(30, 50, 60));
+            add(new Vector3(0, 0, 0));
+            add(new Vector3(10, 30, 60));
+            add(new Vector3(30, 50, 60));
+            add(new Vector3(30, 0, 40));
+            add(new Vector3(-30, 50, 60));
+            add(new Vector3(30, 90, -60));
+            add(new Vector3(30, 80, 60));
+            add(new Vector3(30, 25, 60));
+            add(new Vector3(30, 50, 60));
+            add(new Vector3(30, 40, 60));
+            add(new Vector3(30, 32, 60));
+            add(new Vector3(-30, 20, -60));
+            add(new Vector3(30, 53, 60));
+            add(new Vector3(30, 70, 60));
+
+
             is_Player_Colliding = false;
 
             base.Initialize();
             IsMouseVisible = true;
 
             Font1 = Content.Load<SpriteFont>("SpriteFont/Miramonte");
-
-            //TextRenderer.DrawText(..., score.ToString(), FontFamily.GenericSansSerif, new System.Drawing.Rectangle(350, 30, 100, 30), System.Drawing.Color.Black, System.Drawing.Color.LightGray);
-            model = Content.Load<Model>("Doodle/doodle");
 
             score = 0;
             Gamelost = false;
@@ -100,6 +115,9 @@ namespace Game1
             //Vert buffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
             vertexBuffer.SetData<VertexPositionColor>(triangleVertices);
+
+            water_ = new water(new Vector3(0,-10, 0));
+            water_.Initialize(Content);
         }
 
         /// <summary>
@@ -109,11 +127,7 @@ namespace Game1
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            platform = Content.Load<Model>("Platform/platform");
-            sky = Content.Load<Model>("Sky/sky");
-            water = Content.Load<Model>("Water/water");
-            
+            spriteBatch = new SpriteBatch(GraphicsDevice);           
         }
 
         /// <summary>
@@ -135,18 +149,28 @@ namespace Game1
             if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
-            // Player update
-            player.Update(gameTime, is_Player_Colliding);
-
-            // Score update
-            if (player.position.Y > maxheight)
+            // Game over
+            if (player.position.Y < water_.position.Y)
             {
-                maxheight = player.position.Y;
-                score = (int) (Math.Pow((double)(maxheight/10),3)/4);
+                Gamelost = true;
             }
 
-            // update last because dependent on Player
-            cam.Update(player.position);
+            if (!Gamelost)
+            {
+                // Player update
+                player.Update(gameTime, is_Player_Colliding);
+
+                // Score update
+                if (player.position.Y > maxheight)
+                {
+                    maxheight = player.position.Y;
+                    score = (int)(Math.Pow((double)(maxheight / 10), 3) / 4);
+                }
+
+                // update last because dependent on Player
+                cam.Update(player.camtg);
+
+            }
             base.Update(gameTime);
         }
 
@@ -181,14 +205,31 @@ namespace Game1
 
             }
 
+            foreach(Platform pf in plList)
+            {
+                pf.draw(player.cam);
+            }
+
             player.draw();
 
-            VertexLoader platformMesh = new VertexLoader(platform, cam, ambientLightColor);
-            platformMesh.draw();
+            if(Gamelost)
+            {
+
+                spriteBatch.DrawString(Font1, "You have lost", new Vector2(375, 30), Microsoft.Xna.Framework.Color.Black);
+            }
 
             base.Draw(gameTime);
             spriteBatch.End();
 
+        }
+
+        private Platform add(Vector3 pos)
+        {
+            Platform pf = new Platform(pos);
+            pf.Initialize(Content);
+            plList.Add(pf);
+
+            return pf;
         }
     }
 }

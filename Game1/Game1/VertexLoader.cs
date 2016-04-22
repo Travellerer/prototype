@@ -22,7 +22,7 @@ namespace Game1
             this.ambientLightColor = ambientLightColor;
         }
 
-        public void draw()
+        public void draw(Vector3 pos)
         {
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -36,7 +36,7 @@ namespace Game1
                     }
                     
                     effect.View = cam.viewMatrix;
-                    effect.World = cam.worldMatrix;
+                    effect.World = Matrix.CreateTranslation(pos);
                     effect.Projection = cam.projectionMatrix;
                 }
                 mesh.Draw();

@@ -3,31 +3,41 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game1
 {
     class Doodle
     {
         Model doodle;
-        Camera cam;
+        public Camera cam;
 
         public Vector3 position;
+        public Vector3 camtg;
         bool is_Jumping;
+        bool startsupjump;
         TimeSpan start;
         TimeSpan lastjump;
 
         float jump = 0.5f;
-        float moveSpeed = 10f;
+        float moveSpeed = 0.5f;
+
+        public BoundingSphere Boundingsphere
+        {
+            get
+            {
+                var sphere = doodle.Meshes[0].BoundingSphere;
+                sphere.Center += position;
+                return sphere;
+            }
+        }
 
         public Doodle(Vector3 pos, Camera cam)
         {
             position = pos;
+            camtg = pos;
             is_Jumping = false;
             this.cam = cam;
+            startsupjump = false;
 
         }
 
@@ -42,51 +52,60 @@ namespace Game1
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                position.X += moveSpeed;
+                position.Z += moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                position.Z += moveSpeed;
+                position.X += moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                position.X -= moveSpeed;
+                position.Z -= moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                position.Z -= moveSpeed;
-            }
-
-            if (gameTime.TotalGameTime.Milliseconds % 1000 <= 499)
-            {
-                position.Y += jump;
-                is_Jumping = true;
-            }
-
-            if (gameTime.TotalGameTime.Milliseconds % 1000 >= 500)
-            {
-                position.Y -= jump;
-                is_Jumping = false;
+                position.X -= moveSpeed;
             }
 
 
-            if(is_Jumping == false)
+
+            if (!is_Jumping)
             {
+
+              
+
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
                     position.Y += jump + 0.3f;
                     is_Jumping = true;
                 }
             }
-            
+
+            if (gameTime.TotalGameTime.Milliseconds % 1000 <= 499)
+            {
+                position.Y += jump;
+                is_Jumping = true;
+                if(!startsupjump)
+                {
+                    camtg = position;
+                    startsupjump = true;
+                }
+            }
+
+            if (gameTime.TotalGameTime.Milliseconds % 1000 >= 500)
+            {
+                position.Y -= jump;
+                is_Jumping = false;
+                startsupjump = false;
+            }
+
 
             //if (is_Jumping)
             //{
             //    position.Y += jump;
-
             //    if (gameTime.TotalGameTime.Subtract(start).TotalMilliseconds > 800)
             //    {
             //        is_Jumping = false;
@@ -97,15 +116,17 @@ namespace Game1
 
             //if (!collision && !is_Jumping)
             //{
-            //    position.Y -= ySpeed;
+            //    position.Y -= 0.3f;
             //}
 
         }
 
         public void draw()
         {
+
+
             VertexLoader doodleMesh = new VertexLoader(doodle, cam, new Vector3(0, 0, 0));
-            doodleMesh.draw();
+            doodleMesh.draw(position);
         }
 
     }
