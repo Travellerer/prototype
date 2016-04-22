@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System;
+using System.Collections.Generic;
 
 namespace Game1
 {
@@ -11,12 +12,13 @@ namespace Game1
         Model doodle;
         public Camera cam;
 
+        bool isColliding;
+
         public Vector3 position;
+        Vector3 predictedPosition;
         public Vector3 camtg;
         bool is_Jumping;
         bool startsupjump;
-        TimeSpan start;
-        TimeSpan lastjump;
 
         float jump = 0.5f;
         float moveSpeed = 0.5f;
@@ -26,7 +28,7 @@ namespace Game1
             get
             {
                 var sphere = doodle.Meshes[0].BoundingSphere;
-                sphere.Center += position;
+                sphere.Center += predictedPosition;
                 return sphere;
             }
         }
@@ -34,11 +36,12 @@ namespace Game1
         public Doodle(Vector3 pos, Camera cam)
         {
             position = pos;
+            predictedPosition = pos;
             camtg = pos;
             is_Jumping = false;
             this.cam = cam;
             startsupjump = false;
-
+            isColliding = false;
         }
 
         public void Initialize(ContentManager Content)
@@ -47,61 +50,95 @@ namespace Game1
 
         }
 
-        public void Update(GameTime gameTime, bool collision)
+        public void Update(GameTime gameTime, List<Platform> plList)
         {
+            isColliding = false;
+            predictedPosition = position;
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                position.Z += moveSpeed;
+                predictedPosition.Z += moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                position.X += moveSpeed;
+                predictedPosition.X += moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                position.Z -= moveSpeed;
+                predictedPosition.Z -= moveSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                position.X -= moveSpeed;
+                predictedPosition.X -= moveSpeed;
             }
-
-
 
             if (!is_Jumping)
             {
 
-              
+
 
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
-                    position.Y += jump + 0.3f;
+                    predictedPosition.Y += jump + 0.3f;
                     is_Jumping = true;
                 }
             }
 
+
+
+
+            for (int i = 0; i < plList.Count; ++i)
+                if (plList[i].Boundingsphere.Intersects(this.Boundingsphere))
+                {
+                    isColliding = true;
+                }
+
+
             if (gameTime.TotalGameTime.Milliseconds % 1000 <= 499)
             {
+                if(!isColliding)
+                {
+                    position.Y = predictedPosition.Y;
+                }
                 position.Y += jump;
                 is_Jumping = true;
-                if(!startsupjump)
-                {
-                    camtg = position;
-                    startsupjump = true;
-                }
+                // if (!startsupjump)
+                //  {
+                //     camtg = predictedPosition;
+                //  startsupjump = true;
+                //  }
             }
 
             if (gameTime.TotalGameTime.Milliseconds % 1000 >= 500)
             {
+
+                if (!isColliding)
+                {
+                    position.Y = predictedPosition.Y;
+                }
                 position.Y -= jump;
                 is_Jumping = false;
-                startsupjump = false;
+                //   startsupjump = false;
             }
 
+
+            if (!isColliding)
+            {
+
+
+            
+
+                if (Math.Sqrt((double)Math.Pow(predictedPosition.X, 2) + (double) Math.Pow(predictedPosition.Z, 2)) < 100)
+                {
+                    position.X = predictedPosition.X;
+                    position.Z = predictedPosition.Z;
+                }
+                camtg = position;
+            }
 
             //if (is_Jumping)
             //{
@@ -118,6 +155,8 @@ namespace Game1
             //{
             //    position.Y -= 0.3f;
             //}
+
+
 
         }
 

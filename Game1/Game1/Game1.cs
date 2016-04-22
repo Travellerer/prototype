@@ -7,9 +7,7 @@ using System.Drawing;
 using System.Collections.Generic;
 
 //ToDos: 
-
-// Grafik/Modelle: Plattformen, Umgebung, Wasser, Sterbebild
-// Logik: Kollision, Kamera-koordinaten beschränken
+// Logik: Kollision, Kamera-koordinaten beschränken, Spieler-Bewegung beschränken
 
 namespace Game1
 {
@@ -75,7 +73,7 @@ namespace Game1
             plList = new List<Platform>();
 
             add(new Vector3(30, 50, 60));
-            add(new Vector3(0, 0, 0));
+            add(new Vector3(0, -20, 0));
             add(new Vector3(10, 30, 60));
             add(new Vector3(30, 50, 60));
             add(new Vector3(30, 0, 40));
@@ -163,7 +161,7 @@ namespace Game1
             if (!Gamelost)
             {
                 // Player update
-                player.Update(gameTime, is_Player_Colliding);
+                player.Update(gameTime, plList);
 
                 // Score update
                 if (player.position.Y > maxheight)
