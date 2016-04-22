@@ -214,8 +214,6 @@ namespace Game1
             {
                 pf.draw(player.cam);
             }
-
-            
             player.draw();
 
             if (Gamelost)
