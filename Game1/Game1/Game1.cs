@@ -30,6 +30,7 @@ namespace Game1
         bool is_Player_Colliding;
 
         water water_;
+        sky sky_;
 
         Vector3 ambientLightColor = new Vector3(0,0,0);
 
@@ -61,6 +62,12 @@ namespace Game1
             // TODO: Add your initialization logic here
 
             cam = new Camera(GraphicsDevice);
+
+            sky_ = new sky(new Vector3(0, 0, 0));
+            sky_.Initialize(Content);
+
+            water_ = new water(new Vector3(0, -10, 0));
+            water_.Initialize(Content);
 
             player = new Doodle(new Vector3(0,0,0), cam);
             player.Initialize(Content);
@@ -115,9 +122,7 @@ namespace Game1
             //Vert buffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
             vertexBuffer.SetData<VertexPositionColor>(triangleVertices);
-
-            water_ = new water(new Vector3(0,-10, 0));
-            water_.Initialize(Content);
+            
         }
 
         /// <summary>
@@ -210,9 +215,12 @@ namespace Game1
                 pf.draw(player.cam);
             }
 
+            
+            water_.draw(cam);
+            sky_.draw(cam);
             player.draw();
 
-            if(Gamelost)
+            if (Gamelost)
             {
 
                 spriteBatch.DrawString(Font1, "You have lost", new Vector2(375, 30), Microsoft.Xna.Framework.Color.Black);
