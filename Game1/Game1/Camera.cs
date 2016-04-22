@@ -52,11 +52,11 @@ namespace Game1
             }
             
 
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus) && Math.Sqrt((double)Math.Pow(camPosition.X, 2) + (double)Math.Pow(camPosition.Z + 1f, 2)) < 100)
             {
                 camPosition.Z += 1f;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
+            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) && Math.Sqrt((double)Math.Pow(camPosition.X, 2) + (double)Math.Pow(camPosition.Z-1f, 2)) < 100)
             {
                 camPosition.Z -= 1f;
             }
