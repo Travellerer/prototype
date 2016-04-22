@@ -38,7 +38,7 @@ namespace Game1
             //camTarget.Z = pos.Z;
 
             //camPosition.X = pos.X;
-            camPosition.Y = pos.Y +20;
+            camPosition.Y = pos.Y +10;
             //camTarget.Z = pos.Z -50;
 
             camTarget.X = pos.X;

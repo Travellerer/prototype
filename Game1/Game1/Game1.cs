@@ -208,13 +208,14 @@ namespace Game1
             }
             
             sky_.draw(cam);
+            water_.draw(cam);
 
             foreach (Platform pf in plList)
             {
                 pf.draw(player.cam);
             }
 
-            water_.draw(cam);
+            
             player.draw();
 
             if (Gamelost)
