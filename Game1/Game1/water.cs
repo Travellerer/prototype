@@ -15,8 +15,6 @@ namespace Game1
         Model model;
         public Vector3 position;
 
-
-
         public water(Vector3 pos)
         {
             position = pos;
@@ -32,7 +30,6 @@ namespace Game1
         {
             position.Y += 30f * gametime.ElapsedGameTime.Milliseconds;
         }
-
 
         public void draw(Camera cam)
         {

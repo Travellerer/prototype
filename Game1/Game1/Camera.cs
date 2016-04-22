@@ -36,8 +36,13 @@ namespace Game1
             //camTarget.X = pos.X;
             //camTarget.Z = pos.Z;
 
-            camPosition.Y = pos.Y +10;
+            //camPosition.X = pos.X;
+            camPosition.Y = pos.Y +20;
+            //camTarget.Z = pos.Z -50;
+
+            camTarget.X = pos.X;
             camTarget.Y = pos.Y;
+            camTarget.Z = pos.Z;
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
