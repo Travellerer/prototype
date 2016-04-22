@@ -28,7 +28,7 @@ namespace Game1
 
         public void Update(GameTime gametime)
         {
-            position.Y += 30f * gametime.ElapsedGameTime.Milliseconds;
+            position.Y += 0.02f * gametime.ElapsedGameTime.Milliseconds;
         }
 
         public void draw(Camera cam)

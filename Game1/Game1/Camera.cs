@@ -13,6 +13,7 @@ namespace Game1
     {
         Vector3 camTarget;
         Vector3 camPosition;
+        Vector3 camplayerdirection;
 
         public Matrix projectionMatrix { get; private set; }
         public Matrix viewMatrix { get; private set; }
@@ -74,6 +75,16 @@ namespace Game1
             {
                 Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
                 camPosition = Vector3.Transform(camPosition, rotationMatrix);
+            }
+
+            camplayerdirection.X = pos.X - camPosition.X;
+            camplayerdirection.Z = pos.Z - camPosition.Z;
+
+            if (camplayerdirection.Length() > 20)
+            {
+                camplayerdirection.Normalize();
+                camPosition.X = pos.X - (camplayerdirection.X * 20);
+                camPosition.Z = pos.Z - (camplayerdirection.Z * 20);
             }
 
             viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up);

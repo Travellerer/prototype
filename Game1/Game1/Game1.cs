@@ -6,8 +6,6 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
 
-//ToDos: 
-// Logik: Kollision, Kamera-koordinaten beschränken, Spieler-Bewegung beschränken
 
 namespace Game1
 {
@@ -64,7 +62,7 @@ namespace Game1
             sky_ = new sky(new Vector3(0, 0, 0));
             sky_.Initialize(Content);
 
-            water_ = new water(new Vector3(0, -10, 0));
+            water_ = new water(new Vector3(0, -100, 0));
             water_.Initialize(Content);
 
             player = new Doodle(new Vector3(0,0,0), cam);
@@ -162,6 +160,7 @@ namespace Game1
             {
                 // Player update
                 player.Update(gameTime, plList);
+                water_.Update(gameTime);
 
                 // Score update
                 if (player.position.Y > maxheight)
@@ -221,7 +220,7 @@ namespace Game1
             if (Gamelost)
             {
 
-                spriteBatch.DrawString(Font1, "You have lost", new Vector2(375, 30), Microsoft.Xna.Framework.Color.Black);
+                spriteBatch.DrawString(Font1, "You have lost", new Vector2(350, 260), Microsoft.Xna.Framework.Color.Black);
             }
 
             base.Draw(gameTime);
